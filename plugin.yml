@@ -1,0 +1,14 @@
+name: Maintainence Mode
+main: com.gmail.zcraig29.MaintenanceMode
+version: 1.4
+commands:
+    mm:
+      description: MaintainenceMode Toggle
+      usage: /mm enable or disable
+      permission: mm.toggle
+      permission-message: You don't have <permission>
+permissions:
+    mm.toggle:
+        description : permission to toggle Maintainence Mode
+    mm.bypass:
+        description: permission to join during MaintenenceMode.
