@@ -14,7 +14,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MaintenanceMode extends JavaPlugin {
 	public static boolean kickplayers;
 	Logger log;
-	
+	/*
+	 * test?
+	 * zack
+	 */
 	public void onEnable(){
 		this.log = getLogger();
 		getServer().getPluginManager().registerEvents(new PlayerJoin(this),this);
@@ -25,6 +28,7 @@ public class MaintenanceMode extends JavaPlugin {
 			FileConfiguration config = getConfig();
 			saveDefaultConfig();
 			this.log.info("Configuration file created succesfully!");
+			
 		}
 		
 		if (getConfig().getBoolean("defaults.persist")) {
