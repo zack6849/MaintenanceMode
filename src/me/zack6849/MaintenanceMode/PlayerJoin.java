@@ -12,7 +12,9 @@ public class PlayerJoin implements Listener {
 	public PlayerJoin(MaintenanceMode mm) {
 		plugin = mm;
 	}
-
+	/*
+	 * test
+	 */
 	@EventHandler
 	public void onplayerjoin(PlayerLoginEvent event) {
 		Player p = event.getPlayer();

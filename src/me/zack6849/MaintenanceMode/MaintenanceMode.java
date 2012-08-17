@@ -15,7 +15,7 @@ public class MaintenanceMode extends JavaPlugin {
 	public static boolean kickplayers;
 	Logger log;
 	/*
-	 * test?
+	 * testing
 	 * zack
 	 */
 	public void onEnable(){
