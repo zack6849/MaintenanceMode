@@ -2,12 +2,21 @@
 #kick-message: The message you want to be displayed when a player is boted by MaintenanceMode
 #delay: true or false, weather or not to delay the command
 #time: The dalay in seconds, max is "107374182"
-#warning-message: the message that is displayed when the delay is on, the prefix [Warning] is already there
+#warning-message: the message that is displayed when the delay is on
+#warning prefix: will be in brackets in front of the warning message, default would look like this
+#WARNING MainenanceMode enabled, kicking players in 5 seconds! but with brackets around warning
 defaults:
     kick-message: We Are Currently Under Maintenance, Please Come Back Later
-    warning-message: MainenanceMode enabled, kicking players in 5 seconds!
-    time: 5
     delay: true
+    time: 5
+    warning-message: MainenanceMode enabled, kicking players in 5 seconds!
+    warning-prefix: WARNING
+    motd: true
+    motd-message: We are currently under maintenance!
     persist: true
-#Don't touch this, it is done automatically by the plugin    
-mm: 
+broadcasts:
+    enable: true
+    disable: true
+    warning: true
+mm: false
+ 

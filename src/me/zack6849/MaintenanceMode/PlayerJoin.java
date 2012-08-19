@@ -7,10 +7,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 public class PlayerJoin implements Listener {
-	private MaintenanceMode plugin = null;
+	private MaintenanceMode plugin = null; //name of your main
 
-	public PlayerJoin(MaintenanceMode mm) {
-		plugin = mm;
+	public PlayerJoin(MaintenanceMode mm) { //name of your main and a variable
+		plugin = mm; //then plugin = your variable
 	}
 	/*
 	 * test

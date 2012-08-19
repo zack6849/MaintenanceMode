@@ -7,121 +7,182 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MaintenanceMode extends JavaPlugin {
 	public static boolean kickplayers;
 	Logger log;
-	/*
-	 * testing
-	 * zack
-	 */
+	public void PersistEnable(){
+		if(getConfig().getBoolean("defaults.persist")){
+			if(getConfig().getBoolean("mm")){
+				kickplayers = true;
+				this.log.info("MaintenanceMode Enabled by persistence");
+			}
+		}
+	}
+	public void PersistDisable(){
+		if(getConfig().getBoolean("defaults.persist")){
+			this.getConfig().set("mm", kickplayers);
+			saveConfig();
+			this.log.info("MaintenanceMode persistence set");
+		}
+	}
 	public void onEnable(){
 		this.log = getLogger();
+		this.log.info("Successfully enabled");
 		getServer().getPluginManager().registerEvents(new PlayerJoin(this),this);
+		getServer().getPluginManager().registerEvents(new ServerPing(this),this);
 		final File f = new File(getDataFolder(), "config.yml");
+		final File f1 = new File(getDataFolder(), "redme.yml");
 		if(!f.exists()){
-			this.log.info("No Configuration file found! Generating a new one!");
-			@SuppressWarnings("unused")
-			FileConfiguration config = getConfig();
-			saveDefaultConfig();
-			this.log.info("Configuration file created succesfully!");
-			
+			makeConfig();
 		}
-		
-		if (getConfig().getBoolean("defaults.persist")) {
-			this.log.info("Checking persistance");
-			if (getConfig().getBoolean("mm") == true) {
-				getServer().getConsoleSender().sendMessage("MaintenanceMode is " + ChatColor.GREEN + " ON");
-				kickplayers = true;
-			} else {
-				if (getConfig().getBoolean("mm") == false) {
-					getServer().getConsoleSender().sendMessage("MaintenanceMode is " + ChatColor.RED + " OFF");
-					kickplayers = false;
-				}
-			}
+		if(!f1.exists()){
+			saveResource("readme.yml", true);
 		}
+		PersistEnable();
 	}
-	
+
 	public void onDisable(){
-		this.log.info("Plugin Sucessfully disabled!");
-		if(getConfig().getBoolean("defaults.persist")){
-			this.log.info("Persistance enabled, Saving MaintenanceMode");
-			if(kickplayers == true){
-				this.log.info("Setting config to TRUE");
-				getConfig().set("mm", true);
-			}else{
-				if(kickplayers == false){
-					this.log.info("Setting config to FLASE");
-					getConfig().set("mm", false);
-				}
+		PersistDisable();
+	}
+	private void makeConfig() {
+		this.log.info("No Configuration file found! Generating a new one!");
+		saveDefaultConfig();
+		this.log.info("Configuration file created succesfully!");
+	}
+
+	public void kick(){
+		String kickmsg = getConfig().getString("defaults.kick-message");
+		for (Player p : getServer().getOnlinePlayers()){
+			if(!p.hasPermission("mm.bypass")){
+				p.kickPlayer(kickmsg);
 			}
 		}
-		saveConfig();
 	}
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		String arg1 = args[0];
-		final String warningmessage = getConfig().getString("defaults.warning-message");
-		final String kickmessage = getConfig().getString("defaults.kick-message");
-		long time;
+
+	public void kickDelay(){
+		int time;
 		time = getConfig().getInt("defaults.time");
-		if(cmd.getName().equalsIgnoreCase("mm") && (args.length >= 1)){
-			if(arg1.equalsIgnoreCase("enable")){
-				if(kickplayers == false){
-					if(getConfig().getBoolean("defaults.delay") == true){
-						Bukkit.broadcastMessage(ChatColor.GOLD + "[MM] MaintenanceMode enabled by " + sender.getName());
-						Bukkit.broadcastMessage(ChatColor.RED + "[WARNING] " + warningmessage);
-						kickplayers = true;
-						Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
-							public void run(){
-								for (Player p : getServer().getOnlinePlayers()){
-									if(!p.hasPermission("mm.bypass")){
-										p.kickPlayer(kickmessage);
-									}
-								}
-							}
-						}, time * 20);
-						return true;
-					}else{
-						if(getConfig().getBoolean("defaults.delay") == false){
-							Bukkit.broadcastMessage(ChatColor.GOLD + "[MM] MaintenanceMode enabled by " + sender.getName());
-							kickplayers = true;
-							for (Player p : getServer().getOnlinePlayers()){
-								p.kickPlayer(kickmessage);
-								return true;
-							}
-						}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+			String kickmsg = getConfig().getString("defaults.kick-message");
+			@Override
+			public void run(){
+				kickplayers = true;
+				for (Player p : getServer().getOnlinePlayers()){
+					if(!p.hasPermission("mm.bypass")){
+						p.kickPlayer(kickmsg);
 					}
-				}else{
-					sender.sendMessage(ChatColor.RED + "[ERROR] MaintenanceMode is already enabled!");
+				}
+			}
+		}, time * 20);
+	}
+
+
+	private CommandArg getCommandArg(String argument)
+	{
+		argument = argument.toUpperCase();
+		CommandArg arg;
+
+		try
+		{
+			arg = CommandArg.valueOf(argument);
+		}
+		catch (final Exception e)
+		{
+			arg = null;
+		}
+
+		return arg;
+	}
+
+
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+		if(cmd.getName().equalsIgnoreCase("mm") && (args.length >= 1)){
+			String arg1 = args[0];
+			switch (getCommandArg(args[0])){
+			case ENABLE:
+				return enableMaintenanceMode(sender);
+			case DISABLE:
+				return disableMaintenanceMode(sender);
+			case STATUS:
+				return statusMaintenanceMode(sender);
+			case RELOAD:
+				return reloadMaintenanceMode(sender);
+			default:
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+	private boolean reloadMaintenanceMode(CommandSender sender) {
+		reloadConfig();
+		sender.sendMessage(ChatColor.GOLD + "[MM] " + ChatColor.RESET + ChatColor.YELLOW + "The configuration file has been reloaded.");
+		return true;
+	}
+	private boolean statusMaintenanceMode(CommandSender sender) {
+		if(kickplayers){
+			sender.sendMessage(ChatColor.GOLD + "[MM] " + ChatColor.RESET + ChatColor.YELLOW + "MaintenanceMode is currently enabled.");
+			return true;
+		}else{
+			if(!kickplayers){
+				sender.sendMessage(ChatColor.GOLD + "[MM] " + ChatColor.RESET + ChatColor.YELLOW + "MaintenanceMode is currently disabled.");
+			}
+			return true;
+		}
+	}
+	private boolean disableMaintenanceMode(CommandSender sender) {
+		if(kickplayers){
+			kickplayers = false;
+			if(getConfig().getBoolean("broadcasts.disable")){
+				Bukkit.broadcastMessage(ChatColor.GOLD + "[MM] " + ChatColor.RESET + ChatColor.YELLOW + "MaintenanceMode disabled by " + sender.getName() + ".");
+				return true;
+			}
+		}else{
+			if(!kickplayers){
+				sender.sendMessage(ChatColor.RED + "Error: MaintenanceMode is already disabled!");
+				return true;
+			}
+		}
+		return true;
+	}
+	private boolean enableMaintenanceMode(CommandSender sender) {
+		if(kickplayers) {
+			sender.sendMessage(ChatColor.RED + "Error: MaintenanceMode is already enabled!");
+			return true;
+		}
+		if(getConfig().getBoolean("defaults.delay") == false){
+			if(getConfig().getBoolean("broadcasts.enable")) {	
+				kickplayers = true;
+				Bukkit.broadcastMessage(ChatColor.GOLD + "[MM] " + ChatColor.RESET + ChatColor.YELLOW + "MaintenanceMode enabled by " + sender.getName()+ ".");
+				this.log.info("test 1");
+				return true;
+			}
+			if(!getConfig().getBoolean("broadcasts.enable")){
+				kickplayers = true;
+				kick();
+				return true;
+			}
+		}
+		if(getConfig().getBoolean("defaults.delay")){
+			if(getConfig().getBoolean("broadcasts.warning")){
+				if(!kickplayers){
+					kickplayers = true;
+					String warning = getConfig().getString("defaults.warning-message");
+					String warnprefix = getConfig().getString("defaults.warning-prefix");
+					Bukkit.broadcastMessage(ChatColor.RED + "[" + warnprefix + "] " + warning);
+					kickDelay();
 					return true;
 				}
-			}else{
-				if(arg1.equalsIgnoreCase("disable")){
-					if (kickplayers == true){
-						Bukkit.broadcastMessage(ChatColor.GOLD + "[MM] MaintenanceMode disabled by " + sender.getName());
-						kickplayers = false;
-						return true;
-					}else{
-						sender.sendMessage(ChatColor.RED + "[ERROR] MaintenanceMode is already disabled!");
-						return true;
-					}
-				}
 			}
-			
-		if(arg1.equalsIgnoreCase("status")){
-						if (kickplayers == true){
-							sender.sendMessage(ChatColor.GOLD + "[MM] MaintenanceMode is currently enabled!");
-						}else{
-							if(kickplayers == false){
-								sender.sendMessage(ChatColor.GOLD + "[MM] MaintenanceMode is currently disabled!");
-							}
-						}
-						return true;
-					}
-				}
+			if(!getConfig().getBoolean("broadcasts.warning")){
+				kickplayers = true;
+				kickDelay();
+				return true;
+			}
+		}
 		return false;
 	}
 }
