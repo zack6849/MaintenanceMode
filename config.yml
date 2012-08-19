@@ -12,7 +12,7 @@ defaults:
     warning-message: MainenanceMode enabled, kicking players in 5 seconds!
     warning-prefix: WARNING
     motd: true
-    motd-message: We are currently under maintenance!
+    motd-message: Under maintenance!
     persist: true
 broadcasts:
     enable: true

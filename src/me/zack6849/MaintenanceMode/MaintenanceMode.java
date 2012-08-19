@@ -91,7 +91,7 @@ public class MaintenanceMode extends JavaPlugin {
 		}
 		catch (final Exception e)
 		{
-			arg = null;
+			arg = CommandArg.DEFAULT;
 		}
 
 		return arg;
@@ -110,6 +110,8 @@ public class MaintenanceMode extends JavaPlugin {
 				return statusMaintenanceMode(sender);
 			case RELOAD:
 				return reloadMaintenanceMode(sender);
+			case DEFAULT:
+				return false;
 			default:
 				return false;
 			}
