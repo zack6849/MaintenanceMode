@@ -1,21 +1,21 @@
-#This file will explain all values in the default configuration file for MaintenanceMode
+#This file will explain all values in the default configuration file for LockDown
 #======================DEFAULT CONFIG=========================#
 defaults:
     #the message displayed to the client when they are kicked
-    kick-message: We Are Currently Under Maintenance, Please Come Back Later
+    kick-message: We Are Currently In LockDown, Please Come Back Later
     #weather or not to delay the kick after the message is broadcast
     delay: true
     #how long to wait in seconds for the delay
     time: 5
     #the message broadcasted to the server just before players are kicked
-    warning-message: MainenanceMode enabled, kicking players in 5 seconds!
+    warning-message: LockDown enabled, kicking players in 5 seconds!
     #what to prefix the warning message with
     warning-prefix: WARNING
-    #weather or not to change the MOTD while MaintenanceMode is enabled
+    #weather or not to change the MOTD while LockDown is enabled
     motd: true
     #what to set the MOTD to
-    motd-message: We are currently under maintenance!
-    #weather or not to keep MaintenanceMode's state over server restarts and reloads. 
+    motd-message: LockDown enabled!
+    #weather or not to keep LockDown's state over server restarts and reloads. 
     persist: true
 #weather or not to enabe the different broadcasts
 broadcasts:
@@ -26,5 +26,5 @@ broadcasts:
     #weather or not to broadcast the warning
     warning: true
 #DO NOT UNDER AND CIRCUMSTANCES CHANGE THIS! IT IS CHANGED AUTOMATICALLY BY THE PLUGIN! CHANGING THIS COULD CAUSE ISSUES! YOU HAVE BEEN WARNED!
-mm: false
+ld: false
  

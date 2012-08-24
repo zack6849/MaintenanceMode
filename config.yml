@@ -1,22 +1,22 @@
-#MainteanceMode Configuration file
-#kick-message: The message you want to be displayed when a player is boted by MaintenanceMode
+#LockDown Configuration file
+#kick-message: The message you want to be displayed when a player is booted by LockDown
 #delay: true or false, weather or not to delay the command
 #time: The dalay in seconds, max is "107374182"
 #warning-message: the message that is displayed when the delay is on
 #warning prefix: will be in brackets in front of the warning message, default would look like this
-#WARNING MainenanceMode enabled, kicking players in 5 seconds! but with brackets around warning
+#WARNING LockDown enabled, kicking players in 5 seconds! but with brackets around warning
 defaults:
-    kick-message: We Are Currently Under Maintenance, Please Come Back Later
+    kick-message: We Are Currently In LockDown, Please Come Back Later
     delay: true
     time: 5
-    warning-message: MainenanceMode enabled, kicking players in 5 seconds!
+    warning-message: LockDown enabled, kicking players in 5 seconds!
     warning-prefix: WARNING
     motd: true
-    motd-message: Under maintenance!
+    motd-message: LockDown enabled!
     persist: true
 broadcasts:
     enable: true
     disable: true
     warning: true
-mm: false
+ld: false
  

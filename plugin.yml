@@ -1,14 +1,15 @@
-name: MaintenanceMode
+name: LockDown
 main: me.zack6849.MaintenanceMode.MaintenanceMode
-version: 1.4
+version: 1.5.3
+author: zack6849
 commands:
-    mm:
-      description: MaintainenceMode Toggle
-      usage: /mm <arguments> 
-      permission: mm.toggle
+    ld:
+      description: LockDown Toggle
+      usage: /ld <arguments> 
+      permission: ld.toggle
       permission-message: You don't have <permission>
 permissions:
-    mm.toggle:
-        description : permission to toggle Maintainence Mode
-    mm.bypass:
-        description: permission to join during MaintenenceMode.
+    ld.toggle:
+        description : permission to toggle LockDown.
+    ld.bypass:
+        description: permission to join during LockDown.

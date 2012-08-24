@@ -6,6 +6,7 @@ public enum CommandArg
 	ENABLE("ENABLE"),
 	RELOAD("RELOAD"),
 	DEFAULT(""),
+	HELP("HELP"),
 	STATUS("STATUS");
 	@SuppressWarnings("unused")
 	private final String argument;
