@@ -6,10 +6,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerQuitEvent;
-
 public class PlayerJoin implements Listener {
 	private MaintenanceMode plugin = null; //name of your main
 
@@ -26,7 +22,8 @@ public class PlayerJoin implements Listener {
 			if (MaintenanceMode.kickplayers) {
 				String kickmessage = plugin.getConfig().getString(
 						"defaults.kick-message"); 
-				event.setJoinMessage("    ");
+				event.setJoinMessage("");
+				p.setPlayerListName("");
 				event.getPlayer().kickPlayer(kickmessage);
 			}
 		}

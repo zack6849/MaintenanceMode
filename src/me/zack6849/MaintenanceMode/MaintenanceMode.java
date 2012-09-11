@@ -3,12 +3,6 @@ package me.zack6849.MaintenanceMode;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import javax.swing.text.Document;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -36,7 +30,7 @@ public class MaintenanceMode extends JavaPlugin {
 	}
 	public void onEnable(){
 		this.log = getLogger();
-		this.log.info("Successfully enabled");
+		this.log.info("Successfully enabled!");
 		getServer().getPluginManager().registerEvents(new PlayerJoin(this),this);
 		getServer().getPluginManager().registerEvents(new ServerPing(this),this);
 		try {
@@ -84,6 +78,7 @@ public class MaintenanceMode extends JavaPlugin {
 				for (Player p : getServer().getOnlinePlayers()){
 					if(!p.hasPermission("ld.bypass")){
 						p.kickPlayer(kickmsg);
+						Bukkit.broadcastMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown is currently enabled.");
 					}
 				}
 			}
@@ -110,7 +105,6 @@ public class MaintenanceMode extends JavaPlugin {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if(cmd.getName().equalsIgnoreCase("ld") && (args.length >= 1)){
-			String arg1 = args[0];
 			switch (getCommandArg(args[0])){
 			case ENABLE:
 				return enableLockDown(sender);
@@ -124,6 +118,8 @@ public class MaintenanceMode extends JavaPlugin {
 				return helpLockDown(sender);
 			case DEFAULT:
 				return false;
+			case INFO:
+				return InfoLockDown(sender);
 			default:
 				return false;
 			}
@@ -131,13 +127,25 @@ public class MaintenanceMode extends JavaPlugin {
 			return false;
 		}
 	}
+	private boolean InfoLockDown(CommandSender sender) {
+		Player p = (Player) sender;
+		p.sendMessage(ChatColor.GOLD + "=========LockDown=========");
+		p.sendMessage(ChatColor.YELLOW + "Author: " + this.getDescription().getAuthors());
+		p.sendMessage(ChatColor.YELLOW + "Version: " + this.getDescription().getVersion());
+		p.sendMessage(ChatColor.YELLOW + "Update check link: http://goo.gl/HdmG6");
+		p.sendMessage(ChatColor.YELLOW + "Or if that doesnt work use this");
+		p.sendMessage(ChatColor.YELLOW + this.getDescription().getWebsite());
+		p.sendMessage(ChatColor.GOLD + "==========================");
+		return true;
+	}
 	private boolean helpLockDown(CommandSender sender) {
 		Player p = (Player) sender;
 		p.sendMessage(ChatColor.GOLD + "=========LockDown=========");
 		p.sendMessage(ChatColor.YELLOW + "/ld enable - Enables LockDown");
 		p.sendMessage(ChatColor.YELLOW + "/ld disable - Disables LockDown");
 		p.sendMessage(ChatColor.YELLOW + "/ld reload - Reloads LockDown's Configuration file");
-		p.sendMessage(ChatColor.YELLOW + "/ld status - Tells you if lockdown is enabled or not");
+		p.sendMessage(ChatColor.YELLOW + "/ld status - Tells you if LockDown is enabled or not");
+		p.sendMessage(ChatColor.YELLOW + "/ld info - Tells you some basic information about lockdown");
 		p.sendMessage(ChatColor.GOLD + "==========================");
 		return true;
 	}
@@ -197,7 +205,6 @@ public class MaintenanceMode extends JavaPlugin {
 					String warnprefix = getConfig().getString("defaults.warning-prefix");
 					Bukkit.broadcastMessage(ChatColor.RED + "[" + warnprefix + "] " + warning);
 					kickDelay();
-					Bukkit.broadcastMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown is currently enabled.");
 					return true;
 				}
 			}

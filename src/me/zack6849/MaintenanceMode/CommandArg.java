@@ -7,7 +7,8 @@ public enum CommandArg
 	RELOAD("RELOAD"),
 	DEFAULT(""),
 	HELP("HELP"),
-	STATUS("STATUS");
+	STATUS("STATUS"),
+	INFO("INFO");
 	@SuppressWarnings("unused")
 	private final String argument;
 	
