@@ -28,7 +28,9 @@ public class MaintenanceMode extends JavaPlugin {
 			this.log.info("LockDown persistence set");
 		}
 	}
+	@SuppressWarnings("unused")
 	public void onEnable(){
+		boolean updateEnable = getConfig().getBoolean("defaults.auto-update");
 		this.log = getLogger();
 		this.log.info("Successfully enabled!");
 		getServer().getPluginManager().registerEvents(new PlayerJoin(this),this);
@@ -46,6 +48,9 @@ public class MaintenanceMode extends JavaPlugin {
 		}
 		if(!f1.exists()){
 			saveResource("readme.yml", false);
+		}
+		if(updateEnable){
+			Updater updater = new Updater(this, "lock-down", this.getFile(), Updater.UpdateType.DEFAULT, true);
 		}
 		PersistEnable();
 	}

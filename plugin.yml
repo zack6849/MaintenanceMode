@@ -1,6 +1,6 @@
 name: LockDown
 main: me.zack6849.MaintenanceMode.MaintenanceMode
-version: 1.5.4
+version: 1.5.6
 author: zack6849
 website: http://dev.bukkit.org/server-mods/lock-down/
 commands:

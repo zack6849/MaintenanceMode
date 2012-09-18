@@ -14,6 +14,7 @@ defaults:
     motd: true
     motd-message: LockDown enabled!
     persist: true
+    auto-update: true
 broadcasts:
     enable: true
     disable: true

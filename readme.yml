@@ -3,7 +3,7 @@
 defaults:
     #the message displayed to the client when they are kicked
     kick-message: We Are Currently In LockDown, Please Come Back Later
-    #weather or not to delay the kick after the message is broadcast
+    #whether or not to delay the kick after the message is broadcast
     delay: true
     #how long to wait in seconds for the delay
     time: 5
@@ -11,19 +11,21 @@ defaults:
     warning-message: LockDown enabled, kicking players in 5 seconds!
     #what to prefix the warning message with
     warning-prefix: WARNING
-    #weather or not to change the MOTD while LockDown is enabled
+    #whether or not to change the MOTD while LockDown is enabled
     motd: true
     #what to set the MOTD to
     motd-message: LockDown enabled!
-    #weather or not to keep LockDown's state over server restarts and reloads. 
+    #whether or not to keep LockDown's state over server restarts and reloads. 
     persist: true
-#weather or not to enabe the different broadcasts
+    #whether or not to download updates when they are available.
+    auto-update: true
+#whether or not to enabe the different broadcasts
 broadcasts:
-    #weather or not to broadcast enable messages
+    #whether or not to broadcast enable messages
     enable: true
-    #weather or not to broadcast disable messages
+    #whether or not to broadcast disable messages
     disable: true
-    #weather or not to broadcast the warning
+    #whether or not to broadcast the warning
     warning: true
 #DO NOT UNDER AND CIRCUMSTANCES CHANGE THIS! IT IS CHANGED AUTOMATICALLY BY THE PLUGIN! CHANGING THIS COULD CAUSE ISSUES! YOU HAVE BEEN WARNED!
 ld: false
