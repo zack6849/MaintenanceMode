@@ -7,14 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 public class PlayerJoin implements Listener {
-	private MaintenanceMode plugin = null; //name of your main
+	private MaintenanceMode plugin = null; 
 
-	public PlayerJoin(MaintenanceMode mm) { //name of your main and a variable
-		plugin = mm; //then plugin = your variable
+	public PlayerJoin(MaintenanceMode mm) { 
+		plugin = mm; 
 	}
-	/*
-	 * test
-	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onplayerjoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();

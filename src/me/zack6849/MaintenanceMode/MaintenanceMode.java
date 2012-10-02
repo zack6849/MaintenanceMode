@@ -23,7 +23,7 @@ public class MaintenanceMode extends JavaPlugin {
 	}
 	public void PersistDisable(){
 		if(getConfig().getBoolean("defaults.persist")){
-			this.getConfig().set("ld", kickplayers);
+			this.getConfig().set("ld", Boolean.valueOf(kickplayers));
 			saveConfig();
 			this.log.info("LockDown persistence set");
 		}
@@ -50,7 +50,7 @@ public class MaintenanceMode extends JavaPlugin {
 			saveResource("readme.yml", false);
 		}
 		if(updateEnable){
-			Updater updater = new Updater(this, "lock-down", this.getFile(), Updater.UpdateType.DEFAULT, true);
+			Updater update = new Updater(this, "lock-down", this.getFile(), Updater.UpdateType.DEFAULT, true);
 		}
 		PersistEnable();
 	}
@@ -71,7 +71,6 @@ public class MaintenanceMode extends JavaPlugin {
 			}
 		}
 	}
-
 	public void kickDelay(){
 		int time;
 		time = getConfig().getInt("defaults.time");
@@ -133,91 +132,121 @@ public class MaintenanceMode extends JavaPlugin {
 		}
 	}
 	private boolean InfoLockDown(CommandSender sender) {
-		Player p = (Player) sender;
-		p.sendMessage(ChatColor.GOLD + "=========LockDown=========");
-		p.sendMessage(ChatColor.YELLOW + "Author: " + this.getDescription().getAuthors());
-		p.sendMessage(ChatColor.YELLOW + "Version: " + this.getDescription().getVersion());
-		p.sendMessage(ChatColor.YELLOW + "Update check link: http://goo.gl/HdmG6");
-		p.sendMessage(ChatColor.YELLOW + "Or if that doesnt work use this");
-		p.sendMessage(ChatColor.YELLOW + this.getDescription().getWebsite());
-		p.sendMessage(ChatColor.GOLD + "==========================");
-		return true;
-	}
-	private boolean helpLockDown(CommandSender sender) {
-		Player p = (Player) sender;
-		p.sendMessage(ChatColor.GOLD + "=========LockDown=========");
-		p.sendMessage(ChatColor.YELLOW + "/ld enable - Enables LockDown");
-		p.sendMessage(ChatColor.YELLOW + "/ld disable - Disables LockDown");
-		p.sendMessage(ChatColor.YELLOW + "/ld reload - Reloads LockDown's Configuration file");
-		p.sendMessage(ChatColor.YELLOW + "/ld status - Tells you if LockDown is enabled or not");
-		p.sendMessage(ChatColor.YELLOW + "/ld info - Tells you some basic information about lockdown");
-		p.sendMessage(ChatColor.GOLD + "==========================");
-		return true;
-	}
-	private boolean reloadLockDown(CommandSender sender) {
-		reloadConfig();
-		sender.sendMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "The configuration file has been reloaded.");
-		return true;
-	}
-	private boolean statusLockDown(CommandSender sender) {
-		if(kickplayers){
-			sender.sendMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown is currently enabled.");
-			return true;
+		if(sender.hasPermission("ld.info")){
+			sender.sendMessage(ChatColor.GOLD + "=========LockDown=========");
+			sender.sendMessage(ChatColor.YELLOW + "Author: " + this.getDescription().getAuthors());
+			sender.sendMessage(ChatColor.YELLOW + "Version: " + this.getDescription().getVersion());
+			sender.sendMessage(ChatColor.YELLOW + "Update check link: http://goo.gl/HdmG6");
+			sender.sendMessage(ChatColor.YELLOW + "Or if that doesnt work use this");
+			sender.sendMessage(ChatColor.YELLOW + this.getDescription().getWebsite());
+			sender.sendMessage(ChatColor.GOLD + "==========================");
+			return true;	
 		}else{
-			if(!kickplayers){
-				sender.sendMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown is currently disabled.");
-			}
+			sender.sendMessage(ChatColor.RED + "Error: you don't have permission to do that!");
 			return true;
 		}
 	}
-	private boolean disableLockDown(CommandSender sender) {
-		if(kickplayers){
-			kickplayers = false;
-			if(getConfig().getBoolean("broadcasts.disable")){
-				Bukkit.broadcastMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown disabled by " + sender.getName() + ".");
+	private boolean helpLockDown(CommandSender sender) {
+		if(sender.hasPermission("ld.help")){
+			sender.sendMessage(ChatColor.GOLD + "=========LockDown=========");
+			sender.sendMessage(ChatColor.YELLOW + "/ld enable - Enables LockDown");
+			sender.sendMessage(ChatColor.YELLOW + "/ld disable - Disables LockDown");
+			sender.sendMessage(ChatColor.YELLOW + "/ld urgent - Instant lockdown ");
+			sender.sendMessage(ChatColor.YELLOW + "/ld reload - Reloads LockDown's Configuration file");
+			sender.sendMessage(ChatColor.YELLOW + "/ld status - Tells you if LockDown is enabled or not");
+			sender.sendMessage(ChatColor.YELLOW + "/ld info - Tells you some basic information about lockdown");
+			sender.sendMessage(ChatColor.GOLD + "==========================");
+			return true;	
+		}else{
+			sender.sendMessage(ChatColor.RED + "Error: you don't have permission to do that!");
+			return true;
+		}
+	}
+	private boolean reloadLockDown(CommandSender sender) {
+		if(sender.hasPermission("ld.reload")){
+			reloadConfig();
+			sender.sendMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "The configuration file has been reloaded.");
+			return true;	
+		}else{
+			sender.sendMessage(ChatColor.RED + "Error: you don't have permission to do that!");
+			return true;
+		}
+	}
+	private boolean statusLockDown(CommandSender sender) {
+		if(sender.hasPermission("ld.status")){
+			if(kickplayers){
+				sender.sendMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown is currently enabled.");
 				return true;
+			}else{
+				if(!kickplayers){
+					sender.sendMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown is currently disabled.");
+					return true;
+				}
 			}
 		}else{
-			if(!kickplayers){
-				sender.sendMessage(ChatColor.RED + "Error: LockDown is already disabled!");
-				return true;
-			}
+			sender.sendMessage(ChatColor.RED + "Error: you don't have permission to do that!");
+			return true;
+		}
+		return false;
+	}
+	private boolean disableLockDown(CommandSender sender) {
+		if(sender.hasPermission("ld.toggle")){
+			if(kickplayers){
+				kickplayers = false;
+				if(getConfig().getBoolean("broadcasts.disable")){
+					Bukkit.broadcastMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown disabled by " + sender.getName() + ".");
+					return true;
+				}
+			}else{
+				if(!kickplayers){
+					sender.sendMessage(ChatColor.RED + "Error: LockDown is already disabled!");
+					return true;
+				}
+			}	
+		}else{
+			sender.sendMessage(ChatColor.RED + "Error: you don't have permission to do that!");
+			return true;
 		}
 		return true;
 	}
 	private boolean enableLockDown(CommandSender sender) {
-		if(kickplayers) {
-			sender.sendMessage(ChatColor.RED + "Error: LockDown is already enabled!");
-			return true;
-		}
-		if(getConfig().getBoolean("defaults.delay") == false){
-			if(getConfig().getBoolean("broadcasts.enable")) {	
-				kickplayers = true;
-				Bukkit.broadcastMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown enabled by " + sender.getName()+ ".");
+		if(sender.hasPermission("ld.toggle")){
+			if(kickplayers) {
+				sender.sendMessage(ChatColor.RED + "Error: LockDown is already enabled!");
 				return true;
 			}
-			if(!getConfig().getBoolean("broadcasts.enable")){
-				kickplayers = true;
-				kick();
-				return true;
-			}
-		}
-		if(getConfig().getBoolean("defaults.delay")){
-			if(getConfig().getBoolean("broadcasts.warning")){
-				if(!kickplayers){
+			if(getConfig().getBoolean("defaults.delay") == false){
+				if(getConfig().getBoolean("broadcasts.enable")) {	
 					kickplayers = true;
-					String warning = getConfig().getString("defaults.warning-message");
-					String warnprefix = getConfig().getString("defaults.warning-prefix");
-					Bukkit.broadcastMessage(ChatColor.RED + "[" + warnprefix + "] " + warning);
+					Bukkit.broadcastMessage(ChatColor.GOLD + "[LockDown] " + ChatColor.RESET + ChatColor.YELLOW + "LockDown enabled by " + sender.getName()+ ".");
+					return true;
+				}
+				if(!getConfig().getBoolean("broadcasts.enable")){
+					kickplayers = true;
+					kick();
+					return true;
+				}
+			}
+			if(getConfig().getBoolean("defaults.delay")){
+				if(getConfig().getBoolean("broadcasts.warning")){
+					if(!kickplayers){
+						kickplayers = true;
+						String warning = getConfig().getString("defaults.warning-message");
+						String warnprefix = getConfig().getString("defaults.warning-prefix");
+						Bukkit.broadcastMessage(ChatColor.RED + "[" + warnprefix + "] " + warning);
+						kickDelay();
+						return true;
+					}
+				}
+				if(!getConfig().getBoolean("broadcasts.warning")){
+					kickplayers = true;
 					kickDelay();
 					return true;
 				}
 			}
-			if(!getConfig().getBoolean("broadcasts.warning")){
-				kickplayers = true;
-				kickDelay();
-				return true;
-			}
+		}else{
+			sender.sendMessage(ChatColor.RED + "Error: you don't have permission to do that!");
+			return true;
 		}
 		return false;
 	}

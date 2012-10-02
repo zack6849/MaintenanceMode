@@ -9,7 +9,6 @@ public enum CommandArg
 	HELP("HELP"),
 	STATUS("STATUS"),
 	INFO("INFO");
-	@SuppressWarnings("unused")
 	private final String argument;
 	
 	CommandArg(String argument)

@@ -1,16 +1,32 @@
 name: LockDown
 main: me.zack6849.MaintenanceMode.MaintenanceMode
-version: 1.5.6
+version: 1.5.8
 author: zack6849
 website: http://dev.bukkit.org/server-mods/lock-down/
 commands:
     ld:
       description: LockDown Toggle
-      usage: /ld <arguments> 
-      permission: ld.toggle
-      permission-message: You don't have <permission>
+      usage: /ld [enable,disable,info,help,reload,status]
 permissions:
     ld.toggle:
-        description : permission to toggle LockDown.
+        description: permission to toggle LockDown.
+    ld.help: 
+        description: permission to view the LockDown help messages
+    ld.reload:
+        description: permission to reload LockDown
     ld.bypass:
         description: permission to join during LockDown.
+    ld.status:
+        description: permission to check the status of LockDown
+    ld.info:
+        description: permission to view plugin info
+    ld.*:
+        description: All LockDown permissions
+        children:
+            ld.bypass: true
+            ld.toggle: true
+            ld.instant: true
+            ld.reload: true
+            ld.status: true
+            ld.help: true
+            ld.info: true
