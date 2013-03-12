@@ -1,6 +1,6 @@
 name: LockDown
-main: me.zack6849.MaintenanceMode.MaintenanceMode
-version: 1.5.8
+main: me.zack6849.lockdown.LockDown
+version: 1.5.9
 author: zack6849
 website: http://dev.bukkit.org/server-mods/lock-down/
 commands:
@@ -10,6 +10,8 @@ commands:
 permissions:
     ld.toggle:
         description: permission to toggle LockDown.
+    ld.urgent:
+        description: permission to schedule an urgent lockdown
     ld.help: 
         description: permission to view the LockDown help messages
     ld.reload:
