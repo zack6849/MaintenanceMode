@@ -2,7 +2,7 @@ package me.zack6849.lockdown;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 
 public class PlayerJoin implements Listener {
@@ -11,17 +11,15 @@ public class PlayerJoin implements Listener {
 	public PlayerJoin(LockDown ld) { 
 		plugin = ld; 
 	}
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e){
+	@EventHandler(ignoreCancelled = true)
+	public void onLogin(PlayerLoginEvent e){
 		if(plugin.lockdown){
 			if(!e.getPlayer().hasPermission("ld.bypass")){
-				e.setJoinMessage("");
-				e.getPlayer().kickPlayer(plugin.getConfig().getString("defaults.kick-message"));
-				plugin.log.info("player " +  e.getPlayer().getName() + " was disconnected due to lockdown being enabled.");
+				e.disallow(PlayerLoginEvent.Result.KICK_OTHER, plugin.getConfig().getString("defaults.kick-message"));
 			}
 		}
 	}
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onLeave(PlayerKickEvent e){
 		if(plugin.lockdown){
 			if(!e.getPlayer().hasPermission("ld.bypass")){
